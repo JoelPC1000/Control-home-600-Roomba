@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control M5StickC Plus2</title>
+</head>
+<body>
+    <h2>Send Number to Firebase</h2>
+    <button onclick="sendNumber(1)">1</button>
+    <button onclick="sendNumber(2)">2</button>
+    <button onclick="sendNumber(3)">3</button>
+    <button onclick="sendNumber(4)">4</button>
+    <button onclick="sendNumber(5)">5</button>
+
+    <script>
+function sendNumber(num) {
+    const databaseURL = "https://local-roomba-control-default-rtdb.firebaseio.com/command.json"; // Update with your database URL
+    
+    fetch(databaseURL, {
+        method: "PUT",
+        body: JSON.stringify(num),  // Send just the number, not an object
+        headers: { "Content-Type": "application/json" }
+    })
+    .then(response => response.json())
+    .then(data => console.log("Sent:", data))
+    .catch(error => console.error("Error:", error));
+}
+    </script>
+</body>
+</html>
