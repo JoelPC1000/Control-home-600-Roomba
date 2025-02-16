@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send To M5StickC Plus2</title>
+</head>
+<body>
+    <h2>Send Data to Firebase</h2>
+    <label for="opcode">Opcode:</label>
+    <input type="number" id="opcode" placeholder="Enter Opcode" />
+    <br />
+    <label for="byteData">Byte:</label>
+    <input type="number" id="byteData" placeholder="Enter Byte Data" />
+    <br />
+    <button onclick="convertAndSend()">Send</button>
+
+    <script>
+        function convertAndSend() {
+            // Get values from input fields
+            let opcode = document.getElementById("opcode").value;
+            let byteData = document.getElementById("byteData").value;
+
+            // Firebase database URLs for different databases
+            const opcodeDatabaseURL = "https://local-roomba-control-default-rtdb.firebaseio.com/command.json"; // Replace with your actual database URL for opcode
+            const byteDatabaseURL = "https://local-roomba-control-bytes-default-rtdb.firebaseio.com/command.json"; // Replace with your actual database URL for byte data
+
+            // Send opcode and byte data directly as numbers (no conversion)
+            fetch(opcodeDatabaseURL, {
+                method: "PUT",
+                body: JSON.stringify(Number(opcode)), // Send as number
+                headers: { "Content-Type": "application/json" }
+            })
+            .then(response => response.json())
+            .then(data => console.log("Opcode Sent:", data))
+            .catch(error => console.error("Error with opcode:", error));
+
+            fetch(byteDatabaseURL, {
+                method: "PUT",
+                body: JSON.stringify(Number(byteData)), // Send as number
+                headers: { "Content-Type": "application/json" }
+            })
+            .then(response => response.json())
+            .then(data => console.log("Byte Data Sent:", data))
+            .catch(error => console.error("Error with byte data:", error));
+
+            alert(`Sent: Opcode: ${opcode}, Byte: ${byteData}`);
+        }
+    </script>
+</body>
+</html>
