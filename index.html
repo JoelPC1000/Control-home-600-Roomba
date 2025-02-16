@@ -13,12 +13,10 @@
     <label for="byteData">Byte:</label>
     <input type="number" id="byteData" placeholder="Enter Byte Data" />
     <br />
-    <button onclick="convertAndSend()">Send</button>
+    <button onclick="Send()">Send</button>
 
     <script>
-        let hasReset = false; // Flag to track if reset has already been done
-
-        function convertAndSend() {
+        function Send() {
             // Get values from input fields
             let opcode = document.getElementById("opcode").value;
             let byteData = document.getElementById("byteData").value;
@@ -28,13 +26,11 @@
             byteData = byteData === "" ? 0 : Number(byteData);
 
             // Firebase database URLs for different databases
-            const opcodeDatabaseURL = "https://local-roomba-control-default-rtdb.firebaseio.com/command.json"; // Replace with your actual database URL for opcode
-            const byteDatabaseURL = "https://local-roomba-control-bytes-default-rtdb.firebaseio.com/command.json"; // Replace with your actual database URL for byte data
-
-            // Send opcode and byte data directly as numbers (no conversion)
+            const opcodeDatabaseURL = "https://local-roomba-control-default-rtdb.firebaseio.com/command.json"; 
+            const byteDatabaseURL = "https://local-roomba-control-bytes-default-rtdb.firebaseio.com/command.json"; 
             fetch(opcodeDatabaseURL, {
                 method: "PUT",
-                body: JSON.stringify(opcode), // Send as number, or 0 if empty
+                body: JSON.stringify(opcode),
                 headers: { "Content-Type": "application/json" }
             })
             .then(response => response.json())
@@ -43,37 +39,14 @@
 
             fetch(byteDatabaseURL, {
                 method: "PUT",
-                body: JSON.stringify(byteData), // Send as number, or 0 if empty
+                body: JSON.stringify(byteData),
                 headers: { "Content-Type": "application/json" }
             })
             .then(response => response.json())
             .then(data => console.log("Byte Data Sent:", data))
             .catch(error => console.error("Error with byte data:", error));
-
-
-            // Only reset inputs to 0 once
-            if (!hasReset) {
-                hasReset = true;
-
-                // Reset inputs to 0 after 2 seconds and call convertAndSend again
-                setTimeout(() => {
-                    document.getElementById("opcode").value = '0';  // Reset to 0
-                    document.getElementById("byteData").value = '0';  // Reset to 0
-
-                    // Call convertAndSend() again to send the reset values (0)
-                    convertAndSend();
-                }, 3000); // 1000 milliseconds = 1 second
-            }
         }
 
-        // Reset the flag when the user starts editing the inputs
-        document.getElementById("opcode").addEventListener("input", () => {
-            hasReset = false;  // Allow reset again once new input is entered
-        });
-
-        document.getElementById("byteData").addEventListener("input", () => {
-            hasReset = false;  // Allow reset again once new input is entered
-        });
     </script>
 </body>
 </html>
